@@ -10,20 +10,6 @@ type ClothingItem = {
   imageUrl: string;
 };
 
-type UserPreferences = {
-  home_city: string;
-  activity_preferences: {
-    outdoor: string[];
-    indoor: string[];
-    seasonal: string[];
-  };
-  travel_history: {
-    destination: string;
-    start_date: string;
-    end_date: string;
-    purpose: string;
-  }[];
-};
 
 export default function ClothesRecommendation({ userPreferences}) {
   const [recommendedClothes, setRecommendedClothes] = useState<ClothingItem[]>(

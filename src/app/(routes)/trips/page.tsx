@@ -6,7 +6,7 @@ import axios from "axios";
 const Trip = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [isLoading, setIsLoading] = useState(false);
-  const [trips, setTrips] = useState<any[]>([]);
+  const [trips, setTrips] = useState<unknown[]>([]);
   const [errors, setErrors] = useState<string>("");
   useEffect(() => {
     const storedTrips = localStorage.getItem("trips");
@@ -37,9 +37,10 @@ const Trip = () => {
 
   return (
     <div className="grid grid-cols-2 p-2">
+      {isLoading && "Loading..."}
       {errors && <p className="text-center text-error-500 mb-4">{errors}</p>}
       {trips && trips?.trips?.length > 0 ? (
-        trips?.trips.map((trip: any) => (
+        trips?.trips.map((trip: unknown) => (
           <Trips
             key={trip.id}
             trip={trip}

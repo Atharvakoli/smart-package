@@ -14,7 +14,7 @@ const About = () => {
             ensure efficient and eco-friendly packaging.
           </p>
           <p className="text-purple-700 mb-4">
-            Founded in 2025, we've quickly grown to become a leader in smart
+            Founded in 2025, we`&apos;`ve quickly grown to become a leader in smart
             packaging solutions. Our team of experts is constantly pushing the
             boundaries of what's possible in the world of logistics.
           </p>

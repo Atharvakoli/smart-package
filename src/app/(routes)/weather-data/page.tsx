@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface WeatherData {

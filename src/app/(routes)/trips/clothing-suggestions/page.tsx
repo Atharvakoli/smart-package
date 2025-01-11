@@ -1,7 +1,6 @@
 "use client";
 
 import { getClothingSuggestions } from "@/app/ui/data";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 

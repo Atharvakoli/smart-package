@@ -3,7 +3,6 @@ import { CheckSquare, Cloud, ClipboardList, ShoppingBag } from "lucide-react";
 import { features } from "./data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 const iconMap = {
   ClipboardList,
@@ -14,7 +13,6 @@ const iconMap = {
 
 export default function Features() {
   const [user, setUser] = useState(null);
-  const router = useRouter();
 
   useEffect(() => {
     try {

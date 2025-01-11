@@ -2,7 +2,6 @@
 
 import ClothesRecommendation from "@/app/ui/ClothesRecommendations";
 import axios from "axios";
-import { useEffect, useState } from "react";
 
 type ActivityPreferences = {
   outdoor: string[];

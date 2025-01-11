@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       const match = await bcrypt.compare(password, user.password);
 
       if (match) {
-        const { password, ...userWithoutPassword } = user.toJSON();
+        const { ...userWithoutPassword } = user.toJSON();
         const token = generateAccessToken(userWithoutPassword);
         return NextResponse.json(
           {
