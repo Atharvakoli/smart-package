@@ -36,7 +36,7 @@ export default function SignInForm() {
           Sign In
         </h1>
         {state.error && (
-          <p className="text-center text-red-500 mb-4">{state.error}</p>
+          <p className="text-center w-48 text-red-500 mb-4">{state.error}</p>
         )}
         <form onSubmit={handleSubmit} className="space-y-4 max-w-80">
           <div>

@@ -47,7 +47,7 @@ export const features = [
     title: "Clothing Suggestion Engine",
     description: "Smart recommendations based on weather and activities.",
     icon: "ShoppingBag",
-    route: "/clothing-suggestions",
+    route: "/trips/clothing-suggestions",
   },
   {
     id: 4,
@@ -58,26 +58,60 @@ export const features = [
   },
 ];
 
-export type WeatherData = {
-  location: string;
-  dates: string[];
-  forecasts: {
-    date: string;
-    temp: number;
-    condition: string;
-  }[];
-};
+interface WeatherData {
+  avgtemp_c: number;
+  condition: {
+    text: string;
+  };
+}
 
-export const sampleWeatherData: WeatherData = {
-  location: "New York, NY",
-  dates: ["2024-02-01", "2024-02-07"],
-  forecasts: [
-    { date: "2024-02-01", temp: 72, condition: "Sunny" },
-    { date: "2024-02-02", temp: 68, condition: "Partly Cloudy" },
-    { date: "2024-02-03", temp: 65, condition: "Rain" },
-    { date: "2024-02-04", temp: 70, condition: "Sunny" },
-    { date: "2024-02-05", temp: 73, condition: "Clear" },
-    { date: "2024-02-06", temp: 71, condition: "Partly Cloudy" },
-    { date: "2024-02-07", temp: 69, condition: "Cloudy" },
-  ],
-};
+export function getClothingSuggestions(
+  weatherData: WeatherData,
+  activityType: string
+): string[] {
+  const suggestions: string[] = [];
+
+  // Base layers
+  if (weatherData.avgtemp_c < 10) {
+    suggestions.push("Thermal underwear");
+  }
+
+  // Main clothing
+  if (weatherData.avgtemp_c < 5) {
+    suggestions.push("Heavy winter coat");
+    suggestions.push("Warm sweater");
+  } else if (weatherData.avgtemp_c < 15) {
+    suggestions.push("Light jacket or blazer");
+    suggestions.push("Long-sleeved shirt");
+  } else {
+    suggestions.push("Light shirt or blouse");
+  }
+
+  suggestions.push("Comfortable business trousers or skirt");
+
+  // Footwear
+  suggestions.push("Comfortable dress shoes");
+
+  // Accessories
+  if (weatherData.avgtemp_c < 10) {
+    suggestions.push("Warm scarf");
+    suggestions.push("Gloves");
+    suggestions.push("Warm hat");
+  }
+
+  if (weatherData.condition.text.toLowerCase().includes("rain")) {
+    suggestions.push("Umbrella");
+    suggestions.push("Waterproof jacket");
+  }
+
+  // Business-specific items
+  if (activityType === "business") {
+    suggestions.push("Business suits");
+    suggestions.push("Dress shirts");
+    suggestions.push("Ties");
+    suggestions.push("Business cards");
+    suggestions.push("Laptop bag or briefcase");
+  }
+
+  return suggestions;
+}

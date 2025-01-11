@@ -4,6 +4,9 @@ import { useAuth } from "../auth-context/AuthContext";
 
 const Banner = () => {
   const { state } = useAuth();
+  const access_token = sessionStorage.getItem("access_token");
+
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <section className="py-16 text-purple-400 relative">
       <h1
@@ -18,8 +21,9 @@ const Banner = () => {
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4 text-purple-600">
             <strong className="text-4xl sm:text-5xl text-purple-900">
-              {state?.user?.newUser?.name &&
-                state?.user?.newUser?.name.toUpperCase() + ", "}
+              {user?.user?.name && access_token
+                ? user?.user?.name.toUpperCase() + ", "
+                : ""}
             </strong>
             Create Your Perfect Packing List with SmartPack
           </h1>

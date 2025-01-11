@@ -27,7 +27,7 @@ UserPreferences.init(
         key: "id",
       },
       onUpdate: "CASCADE",
-      onDelete: "SET NULL",
+      onDelete: "CASCADE",
     },
     home_city: {
       type: DataTypes.STRING,

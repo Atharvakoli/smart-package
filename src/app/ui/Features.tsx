@@ -3,6 +3,7 @@ import { CheckSquare, Cloud, ClipboardList, ShoppingBag } from "lucide-react";
 import { features } from "./data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const iconMap = {
   ClipboardList,
@@ -13,6 +14,7 @@ const iconMap = {
 
 export default function Features() {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -23,7 +25,8 @@ export default function Features() {
     }
   }, []);
 
-  const access_token = user?.newUser?.access_token;
+  const access_token = sessionStorage.getItem("access_token");
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -35,7 +38,10 @@ export default function Features() {
             const Icon = iconMap[feature.icon as keyof typeof iconMap];
             return (
               <Link
-                href={`${access_token && feature.route}`}
+                href={{
+                  pathname: access_token ? feature.route : "/auth/sign-up",
+                  query: access_token ? { id: user?.user?.id } : "",
+                }}
                 key={feature.id}
                 className="flex flex-col items-center text-center p-6 rounded-lg border border-gray-200 hover:border-purple-200 hover:shadow-lg transition-all"
               >

@@ -23,7 +23,14 @@ export default function SignUpForm() {
 
     const userDetails = { name, email, contactNumber: contact, password };
     const user = await signUp(userDetails);
-    console.log(user?.error);
+
+    if (user) {
+      setName("");
+      setEmail("");
+      setPassword("");
+      setContact("");
+    }
+
     if (user?.error === "User already exists.") {
       router.push("/auth/sign-in");
     } else if (user?.message === "User created successfully.") {

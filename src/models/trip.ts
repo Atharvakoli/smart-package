@@ -24,9 +24,11 @@ Trip.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: "user",
+        model: "users",
         key: "id",
       },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     location: {
       type: DataTypes.STRING,

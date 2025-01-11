@@ -1,27 +1,42 @@
-import Travel from "@/models/trip";
+import Trip from "@/models/trip";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { validateTripDetails } from "../../../../../../database/service/index.service";
 
-interface Travels {
+interface Trips {
   user_id: string;
-  location: number;
+  location: string;
   start_date: string;
   end_date: string;
+  sex: string;
   num_people: number;
+  activity_type: string[];
+  frequency: string;
 }
 
-async function createTravel(travelDetails: Travels) {
+async function createTrip(tripDetails: Trips) {
   try {
-    const { user_id, location, start_date, end_date, num_people } =
-      travelDetails;
+    const {
+      user_id,
+      location,
+      start_date,
+      end_date,
+      sex,
+      num_people,
+      activity_type,
+      frequency,
+    } = tripDetails;
 
-    const newTravel = await Travel.create({
+    const newTravel = await Trip.create({
       id: uuidv4(),
       user_id,
       location,
       start_date,
       end_date,
+      sex,
       num_people,
+      activity_type,
+      frequency,
     });
     return newTravel;
   } catch (error) {
@@ -31,16 +46,18 @@ async function createTravel(travelDetails: Travels) {
 
 export async function POST(req: NextResponse) {
   try {
-    const travelDetails: Travels = await req.json();
-    if (!travelDetails) {
+    const tripDetails: Trips = await req.json();
+
+    const errors = validateTripDetails(tripDetails);
+    if (errors.length > 0) {
       return NextResponse.json(
-        { error: "Credentails are required" },
+        { error: "Credentails are required", errors },
         { status: 404 }
       );
     }
-    const newTravel = await createTravel(travelDetails);
+    const newTrip = await createTrip(tripDetails);
 
-    if (!newTravel) {
+    if (!newTrip) {
       return NextResponse.json(
         { error: "Failed to Create travel details" },
         { status: 400 }
@@ -48,12 +65,12 @@ export async function POST(req: NextResponse) {
     }
 
     return NextResponse.json({
-      message: "Travel Created successfully.",
-      newTravel,
+      message: "Trip Created successfully.",
+      newTrip,
     });
   } catch (error) {
     return NextResponse.json(
-      { error: `Failed to Create Travel ${error}` },
+      { error: `Failed to Create Trip ${error}` },
       { status: 500 }
     );
   }

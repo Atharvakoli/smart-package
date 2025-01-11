@@ -37,7 +37,7 @@ export async function DELETE(
       );
     }
     return NextResponse.json({
-      message: "User deleted successfully.",
+      message: "User Logged successfully.",
       deletedUser,
     });
   } catch (error) {

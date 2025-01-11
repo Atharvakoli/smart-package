@@ -1,5 +1,5 @@
 import "dotenv/config";
-import axiosInstance, { axiosInstance1 } from "../lib/axios.lib"
+import axiosInstance, { axiosInstance1 } from "../lib/axios.lib";
 async function getWeather(query) {
   const response = await axiosInstance.get(
     `/current.json?key=${process.env.API_KEY}&q=${query}&aql=yes`
@@ -28,14 +28,13 @@ async function getAlerts(query) {
   return response.data;
 }
 
-
 async function getSearchPhotos(query) {
   let photos = [];
   const response = await axiosInstance1.get(
     `/search/photos?query=${query}&page=1&client_id=${process.env.UNSPLASH_ACCESS_KEY}`
   );
 
-  for(let i = 0;i < 10;i++) {
+  for (let i = 0; i < 10; i++) {
     photos.push(response.data.results[i]);
   }
 
@@ -94,6 +93,43 @@ const weatherConditions = [
   "Moderate or heavy snow with thunder",
 ];
 
+function validateTripDetails({
+  user_id,
+  location,
+  start_date,
+  end_date,
+  sex,
+  num_people,
+  activity_type,
+  frequency,
+}) {
+  let errors = [];
+  if (!user_id || typeof user_id !== "string") {
+    errors.push("user_id is required and should be string");
+  }
+  if (!location || typeof location !== "string") {
+    errors.push("location is required and should be string");
+  }
+  if (!start_date || typeof start_date !== "string") {
+    errors.push("startDate is required and should be string");
+  }
+  if (!end_date || typeof end_date !== "string") {
+    errors.push("endDate is required and should be string");
+  }
+  if (!sex || typeof sex !== "string") {
+    errors.push("sex is required and should be string");
+  }
+  if (!num_people || typeof num_people !== "number") {
+    errors.push("travelers is required and should be number");
+  }
+  if (!activity_type || !Array.isArray(activity_type)) {
+    errors.push("activityTypes is required and should be an array");
+  }
+  if (!frequency || typeof frequency !== "string") {
+    errors.push("frequency is required and should be string");
+  }
+  return errors;
+}
 
 export {
   getWeather,
@@ -102,4 +138,5 @@ export {
   getWeatherForcast,
   getSearchPhotos,
   weatherConditions,
+  validateTripDetails,
 };

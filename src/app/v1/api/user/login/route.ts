@@ -1,6 +1,7 @@
 import User from "@/models/User";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
+import { generateAccessToken } from "../register/route";
 
 async function getUserByEmail(email: string) {
   try {
@@ -23,10 +24,12 @@ export async function POST(req: NextRequest) {
 
       if (match) {
         const { password, ...userWithoutPassword } = user.toJSON();
+        const token = generateAccessToken(userWithoutPassword);
         return NextResponse.json(
           {
             message: "Welcome back to our services.",
-            user: userWithoutPassword,
+            user: { ...userWithoutPassword },
+            access_token: token,
           },
           { status: 200 }
         );

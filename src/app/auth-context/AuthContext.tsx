@@ -100,59 +100,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signIn = async (email: string, password: string) => {
     try {
       dispatch({ type: actionTypes.LOADING });
-
       const response = await axios.post(`/v1/api/user/login`, {
         email,
         password,
       });
-      const user = response.data;
+      const { access_token, ...user } = response.data;
+
       dispatch({ type: actionTypes.SIGN_IN, payload: user });
-      dispatch({ type: actionTypes.SUCCESS });
       localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("access_token", access_token);
       return user;
     } catch (error) {
       dispatch({
         type: actionTypes.ERROR,
-        payload: `${error.message}`,
+        payload: `${error?.response?.data?.error || error.message}`,
       });
-      console.error("Sign In Failed:", error);
     }
   };
 
   const signUp = async (userDetails: User) => {
     try {
       dispatch({ type: actionTypes.LOADING });
-
       const response = await axios.post(`/v1/api/user/register`, userDetails);
+      const { access_token, ...user } = response.data;
 
-      const user = response.data;
-      console.log(user);
       dispatch({ type: actionTypes.SIGN_UP, payload: user });
-      dispatch({ type: actionTypes.SUCCESS });
       localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("access_token", access_token);
       return user;
     } catch (error) {
       dispatch({
         type: actionTypes.ERROR,
-        payload: `${error?.response?.data?.error}`,
+        payload: `${error?.response?.data?.error || error.message}`,
       });
-      console.error("Sign Up Failed:", error);
     }
   };
 
   const logout = async (id: string) => {
     try {
       dispatch({ type: actionTypes.LOADING });
-      localStorage.removeItem("user");
       const user = await axios.delete(`/v1/api/user/delete/${id}`);
-      console.log(user);
-      dispatch({ type: actionTypes.LOGOUT, payload: user });
-      dispatch({ type: actionTypes.SUCCESS });
-      return user;
+      localStorage.removeItem("user");
+      sessionStorage.removeItem("access_token");
+      dispatch({ type: actionTypes.LOGOUT, payload: user.data });
     } catch (error) {
       dispatch({
         type: actionTypes.ERROR,
-        payload: error?.response?.data?.error || "Something went wrong.",
+        payload: `${error?.response?.data?.error || "Something went wrong."}`,
       });
     }
   };

@@ -47,8 +47,11 @@ async function createNewUser(user: Users) {
     });
 
     return newUser;
-  } catch (error: any) {
-    throw new Error(`Database query failed: ${error}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Database query failed: ${error.message}`);
+    }
+    throw new Error("Unknown error occurred.");
   }
 }
 
@@ -61,7 +64,7 @@ export async function POST(req: NextRequest) {
 
     if (!emailRegix.test(user.email)) {
       return NextResponse.json(
-        { error: "Invalid email or contact format." },
+        { error: "Invalid email format." },
         { status: 400 }
       );
     }
@@ -86,25 +89,27 @@ export async function POST(req: NextRequest) {
 
     const newUser: Users = await createNewUser(user);
 
-    const token = generateAccessToken(newUser);
-
-    const UserWithToken = {
-      ...newUser.dataValues,
-      access_token: token,
-    };
+    const access_token = generateAccessToken(newUser);
 
     return NextResponse.json(
       {
         message: "User created successfully.",
-        newUser: UserWithToken,
+        user: {
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          contactNumber: newUser.contactNumber,
+        },
+        access_token,
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
     return NextResponse.json(
-      {
-        error: error.message || "Failed to create user.",
-      },
+      { error: "An unknown error occurred." },
       { status: 500 }
     );
   }

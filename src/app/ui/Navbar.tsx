@@ -6,25 +6,19 @@ import Banner from "./Banner";
 import { useAuth } from "../auth-context/AuthContext";
 
 const Navbar = () => {
-  const { state, logout } = useAuth();
-  const [user, setUser] = useState(null);
-
+  const { state } = useAuth();
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      setUser(storedUser);
+      const access_token = sessionStorage.getItem("access_token");
+      setToken(access_token);
     } catch (error) {
       console.error("Failed to parse user from localStorage:", error);
     }
   }, []);
 
-  const access_token = user?.newUser?.access_token;
-
-  async function handleLogOut() {
-    const logoutUser = await logout(user?.newUser?.id);
-    setMessage(logoutUser?.data?.message)
-  }
+  
 
   return (
     <>
@@ -50,7 +44,7 @@ const Navbar = () => {
               >
                 About
               </Link>
-              {access_token && (
+              {token && (
                 <Link
                   href="/trips"
                   className="text-sm font-medium text-purple-400 hover:text-purple-600"
@@ -64,18 +58,14 @@ const Navbar = () => {
               >
                 Contact
               </Link>
-              {access_token ? (
+              {token || state?.user ? (
                 <>
                   <Link href="/profile">
                     <button className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 h-9 px-4 py-2">
                       PROFILE
                     </button>
                   </Link>
-                  <Link href="" onClick={handleLogOut}>
-                    <button className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 h-9 px-4 py-2">
-                      Logout
-                    </button>
-                  </Link>
+                  
                 </>
               ) : (
                 <>
