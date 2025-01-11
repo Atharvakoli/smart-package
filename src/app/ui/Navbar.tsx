@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Cloud } from "lucide-react";
 import Banner from "./Banner";
 import { useAuth } from "../auth-context/AuthContext";
+import Image from "next/image";
 
 const Navbar = () => {
   const { state } = useAuth();
@@ -18,7 +19,7 @@ const Navbar = () => {
     }
   }, []);
 
-  
+  const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <>
@@ -61,11 +62,17 @@ const Navbar = () => {
               {token || state?.user ? (
                 <>
                   <Link href="/profile">
-                    <button className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 h-9 px-4 py-2">
-                      PROFILE
-                    </button>
+                    <Image
+                      src={`https://avatar.iran.liara.run/username?username=${
+                        user?.user?.name.split(" ")[0] +
+                        user?.user?.name.split(" ")[1]
+                      }`}
+                      alt="Profile"
+                      className="w-10 h-10 rounded-full inline-flex items-center justify-center text-sm font-medium  text-white"
+                      height={50}
+                      width={50}
+                    />
                   </Link>
-                  
                 </>
               ) : (
                 <>

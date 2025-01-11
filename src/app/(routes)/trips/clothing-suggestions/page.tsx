@@ -1,21 +1,34 @@
 "use client";
 
 import { getClothingSuggestions } from "@/app/ui/data";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
-const ClothinSuggestions = () => {
+const ClothingSuggestions = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = useMemo(() => searchParams.get("id"), [searchParams]);
 
-  const weatherData = JSON.parse(localStorage.getItem("weather"));
-  const trips = JSON.parse(localStorage.getItem("trips"));
-  const trip = trips?.trips.filter((trip) => trip.id === id)[0];
+  const weatherData = useMemo(
+    () => JSON.parse(localStorage.getItem("weather") || "{}"),
+    []
+  );
+  const trips = useMemo(
+    () => JSON.parse(localStorage.getItem("trips") || "{}"),
+    []
+  );
+  const trip = useMemo(
+    () => trips?.trips?.find((trip) => trip.id === id),
+    [id, trips]
+  );
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [displayedData, setDisplayedData] = useState<string>("");
 
-  const handle = () => {
-    const avgWeather = weatherData?.weatherForecast.forecast.forecastday.reduce(
+  useEffect(() => {
+    if (!weatherData || !trip) return;
+
+    const avgWeather = weatherData.weatherForecast.forecast.forecastday.reduce(
       (acc, day) => {
         acc.avgtemp_c += day.day.avgtemp_c;
         return acc;
@@ -23,20 +36,43 @@ const ClothinSuggestions = () => {
       {
         avgtemp_c: 0,
         condition:
-          weatherData?.weatherForecast.forecast.forecastday[0].day.condition,
+          weatherData.weatherForecast.forecast.forecastday[0].day.condition,
       }
     );
 
     avgWeather.avgtemp_c /=
-      weatherData?.weatherForecast.forecast.forecastday.length;
+      weatherData.weatherForecast.forecast.forecastday.length;
 
     const clothingSuggestions = getClothingSuggestions(
       avgWeather,
-      trip?.activity_type[0]
+      trip.activity_type[0]
     );
 
     setSuggestions(clothingSuggestions);
-  };
+
+    const dataToSend = {
+      location: trip.location,
+      dates: `${trip.start_date} to ${trip.end_date}`,
+      activity: trip.activity_type.join(", "),
+      numPeople: trip.num_people,
+      gender: trip.sex,
+      weather: weatherData.weatherForecast.forecast.forecastday
+        .map(
+          (day) =>
+            `${day.date}: ${day.day.avgtemp_c.toFixed(1)}°C, ${
+              day.day.condition.text
+            }`
+        )
+        .join("|"),
+      suggestions: clothingSuggestions.join("|"),
+    };
+
+    setDisplayedData(encodeURIComponent(JSON.stringify(dataToSend)));
+  }, [weatherData, trip]);
+
+  if (!trip) {
+    return <p className="text-center text-red-500">No trip data found.</p>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg text-purple-800">
@@ -48,24 +84,24 @@ const ClothinSuggestions = () => {
         <div>
           <h2 className="text-xl font-semibold mb-2">Trip Details</h2>
           <p>
-            <strong>Location:</strong> {trip?.location}
+            <strong>Location:</strong> {trip.location}
           </p>
           <p>
-            <strong>Dates:</strong> {trip?.start_date} to {trip?.end_date}
+            <strong>Dates:</strong> {trip.start_date} to {trip.end_date}
           </p>
           <p>
-            <strong>Activity:</strong> {trip?.activity_type.join(", ")}
+            <strong>Activity:</strong> {trip.activity_type.join(", ")}
           </p>
           <p>
-            <strong>Number of People:</strong> {trip?.num_people}
+            <strong>Number of People:</strong> {trip.num_people}
           </p>
           <p>
-            <strong>Gender:</strong> {trip?.sex}
+            <strong>Gender:</strong> {trip.sex}
           </p>
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-2">Weather Forecast</h2>
-          {weatherData?.weatherForecast.forecast.forecastday.map((day) => (
+          {weatherData?.weatherForecast?.forecast?.forecastday?.map((day) => (
             <div key={day.date} className="mb-2">
               <p>
                 <strong>{day.date}:</strong> {day.day.avgtemp_c.toFixed(1)}°C,{" "}
@@ -75,7 +111,6 @@ const ClothinSuggestions = () => {
           ))}
         </div>
       </div>
-
       <div>
         <h2 className="text-xl font-semibold mb-2">Clothing Suggestions</h2>
         <ul className="list-disc pl-5">
@@ -86,8 +121,16 @@ const ClothinSuggestions = () => {
           ))}
         </ul>
       </div>
+      {/* <div className="mt-6">
+        <Link
+          href="/suggested-clothes"
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 h-9 px-4 py-2"
+        >
+          Create packing list
+        </Link>
+      </div> */}
     </div>
   );
 };
 
-export default ClothinSuggestions;
+export default ClothingSuggestions;

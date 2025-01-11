@@ -126,6 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       dispatch({ type: actionTypes.SIGN_UP, payload: user });
       localStorage.setItem("user", JSON.stringify(user));
+
       sessionStorage.setItem("access_token", access_token);
       return user;
     } catch (error) {
@@ -141,7 +142,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       dispatch({ type: actionTypes.LOADING });
       const user = await axios.delete(`/v1/api/user/delete/${id}`);
       localStorage.removeItem("user");
+      localStorage.removeItem("trips");
+      localStorage.removeItem("user-preferences");
+      localStorage.removeItem("user");
+      localStorage.removeItem("weather");
       sessionStorage.removeItem("access_token");
+
       dispatch({ type: actionTypes.LOGOUT, payload: user.data });
     } catch (error) {
       dispatch({

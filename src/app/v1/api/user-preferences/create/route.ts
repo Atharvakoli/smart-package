@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
 
     const { user_id, home_city, activity_preferences, travel_history } =
       userPreferences;
+      console.log(userPreferences);
 
     if (!user_id || !home_city || !activity_preferences || !travel_history) {
       return NextResponse.json(
