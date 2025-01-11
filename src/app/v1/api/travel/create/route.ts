@@ -1,5 +1,5 @@
 import Trip from "@/models/trip";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { validateTripDetails } from "../../../../../../database/service/index.service";
 
@@ -44,7 +44,7 @@ async function createTrip(tripDetails: Trips) {
   }
 }
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const tripDetails: Trips = await req.json();
 

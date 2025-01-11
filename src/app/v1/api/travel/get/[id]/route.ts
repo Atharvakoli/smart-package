@@ -1,6 +1,6 @@
 import { User } from "@/models";
 import Trip from "@/models/trip";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 async function getAllTrips() {
   try {
@@ -17,10 +17,7 @@ async function getAllTrips() {
   }
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET({ params }: { params: { id: string } }) {
   try {
     const { id } = await params;
     const trips = await getAllTrips();

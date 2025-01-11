@@ -1,5 +1,5 @@
 import { Travel } from "@/models";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 interface Travels {
   id: string;
@@ -25,10 +25,7 @@ async function getUpdatedTravel(travel: Travel, travelDetails: Travels) {
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT({ params }: { params: { id: string } }) {
   try {
     const id = params.id;
     if (!id) {

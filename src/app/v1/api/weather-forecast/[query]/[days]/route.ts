@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { validateWeatherForecastDetails } from "../../../../../../../database/controllers/validation/validate";
 import { getWeatherForcast } from "../../../../../../../database/service/index.service";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { query: string; days: string } }
-) {
+export async function GET({
+  params,
+}: {
+  params: { query: string; days: string };
+}) {
   try {
     const { query, days } = await params;
 

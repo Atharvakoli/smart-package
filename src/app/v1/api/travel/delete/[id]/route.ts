@@ -1,5 +1,5 @@
 import Travel from "@/models/trip";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 async function deleteTravel(existingTravel: Travel) {
   try {
@@ -9,10 +9,7 @@ async function deleteTravel(existingTravel: Travel) {
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE({ params }: { params: { id: string } }) {
   try {
     const id = params.id;
 

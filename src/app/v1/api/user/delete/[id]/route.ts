@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 async function deleteUser(existingUser: User) {
   try {
@@ -9,10 +9,7 @@ async function deleteUser(existingUser: User) {
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE({ params }: { params: { id: string } }) {
   try {
     const id = params.id;
     console.log(id);
