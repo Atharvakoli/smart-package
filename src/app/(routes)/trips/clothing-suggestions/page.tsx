@@ -73,6 +73,8 @@ const ClothingSuggestions = () => {
     return <p className="text-center text-red-500">No trip data found.</p>;
   }
 
+  console.log(displayedData);
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg text-purple-800">
       <h1 className="text-3xl font-bold mb-6 text-center">
