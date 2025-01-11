@@ -1,5 +1,5 @@
 import Clothing from "@/models/Clothing";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
 interface Clothings {
@@ -10,8 +10,7 @@ interface Clothings {
   ranking: number;
 }
 
-async function createClothing(clothingDetails: Clothings)
-{
+async function createClothing(clothingDetails: Clothings) {
   try {
     const {
       clothing_type,
@@ -35,7 +34,7 @@ async function createClothing(clothingDetails: Clothings)
   }
 }
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const clothingDetails: Clothings = await req.json();
     if (!clothingDetails) {
