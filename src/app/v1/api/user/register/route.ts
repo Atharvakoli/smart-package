@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { generateAccessToken, verifyAccessToken } from "../../../../../../database/service/index.service";
+import { generateAccessToken } from "../../../../../../database/service/index.service";
 
 interface Users {
   id: string;
@@ -12,7 +12,6 @@ interface Users {
   contactNumber: string;
   password: string;
 }
-
 
 async function createNewUser(user: Users) {
   try {
