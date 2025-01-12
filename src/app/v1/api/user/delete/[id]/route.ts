@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 async function deleteUser(existingUser: User) {
   try {
@@ -9,10 +9,9 @@ async function deleteUser(existingUser: User) {
   }
 }
 
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   try {
-    const id = params.id;
-    console.log(id);
+    const { id } = context.params;
     if (id === undefined) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }

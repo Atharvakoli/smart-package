@@ -34,12 +34,9 @@ async function getUpdatedUserPreferences(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, context: { params: { id: string } }) {
   try {
-    const id = params.id;
+   const { id } = context.params;
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }

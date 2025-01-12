@@ -22,14 +22,11 @@ async function updateUser(user: Users, existingUser: User) {
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, context: { params: { id: string } }) {
   const emailRegix = /^[a-z0-9][\w\.]{m,n}\@\w+?(\.\w+){1,}$/gi;
   const number_regix = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
   try {
-    const id = params.id;
+    const { id } = context.params;
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }

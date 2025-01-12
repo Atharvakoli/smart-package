@@ -1,5 +1,5 @@
 import UserPreferences from "@/models/UserPreferences";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 async function deletePreferences(existingUserPreferences: UserPreferences) {
   try {
@@ -9,9 +9,9 @@ async function deletePreferences(existingUserPreferences: UserPreferences) {
   }
 }
 
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   try {
-    const id = params.id;
+   const { id } = context.params;
 
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });

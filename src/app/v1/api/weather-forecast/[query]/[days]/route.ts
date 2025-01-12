@@ -1,14 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { validateWeatherForecastDetails } from "../../../../../../../database/controllers/validation/validate";
 import { getWeatherForcast } from "../../../../../../../database/service/index.service";
 
-export async function GET({
-  params,
-}: {
-  params: { query: string; days: string };
-}) {
+export async function GET(req: NextRequest, context: { params: { query: string, days: string } }) {
   try {
-    const { query, days } = await params;
+    const { query, days } = context.params;
 
     const errors = validateWeatherForecastDetails(query, parseInt(days));
 
