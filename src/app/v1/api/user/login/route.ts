@@ -1,7 +1,8 @@
 import User from "@/models/User";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
-import { generateAccessToken } from "../register/route";
+import { generateAccessToken } from "../../../../../../database/service/index.service";
+
 
 async function getUserByEmail(email: string) {
   try {
