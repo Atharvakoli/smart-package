@@ -1,48 +1,69 @@
 import "dotenv/config";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import axiosInstance, { axiosInstance1 } from "../lib/axios.lib";
-async function getWeather(query) {
-  const response = await axiosInstance.get(
+
+interface Users {
+  id: string;
+  email: string;
+}
+
+interface TripDetails {
+  user_id: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+  sex: string;
+  num_people: number;
+  activity_type: string[];
+  frequency: string;
+}
+
+interface WeatherResponse {
+  data: any;
+}
+
+async function getWeather(query: string): Promise<any> {
+  const response: WeatherResponse = await axiosInstance.get(
     `/current.json?key=${process.env.API_KEY}&q=${query}&aql=yes`
   );
   return response.data;
 }
 
-async function getWeatherForcast(query, days) {
-  const response = await axiosInstance.get(
+async function getWeatherForcast(query: string, days: number): Promise<any> {
+  const response: WeatherResponse = await axiosInstance.get(
     `/forecast.json?key=${process.env.API_KEY}&q=${query}&days=${days}&aql=yes`
   );
   return response.data;
 }
 
-async function getWeatherHistory(query, dt) {
-  const response = await axiosInstance.get(
+async function getWeatherHistory(query: string, dt: string): Promise<any> {
+  const response: WeatherResponse = await axiosInstance.get(
     `/history.json?key=${process.env.API_KEY}&q=${query}&dt=${dt}`
   );
   return response.data;
 }
 
-async function getAlerts(query) {
-  const response = await axiosInstance.get(
+async function getAlerts(query: string): Promise<any> {
+  const response: WeatherResponse = await axiosInstance.get(
     `/alerts.json?key=${process.env.API_KEY}&q=${query}`
   );
   return response.data;
 }
 
-async function getSearchPhotos(query) {
-  let photos = [];
+async function getSearchPhotos(query: string): Promise<any[]> {
+  const photos: any[] = [];
   const response = await axiosInstance1.get(
     `/search/photos?query=${query}&page=1&client_id=${process.env.UNSPLASH_ACCESS_KEY}`
   );
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < Math.min(10, response.data.results.length); i++) {
     photos.push(response.data.results[i]);
   }
 
   return photos;
 }
 
-const weatherConditions = [
+const weatherConditions: string[] = [
   "Sunny",
   "Clear",
   "Partly cloudy",
@@ -103,8 +124,8 @@ function validateTripDetails({
   num_people,
   activity_type,
   frequency,
-}) {
-  let errors = [];
+}: TripDetails): string[] {
+  const errors: string[] = [];
   if (!user_id || typeof user_id !== "string") {
     errors.push("user_id is required and should be string");
   }
@@ -132,7 +153,7 @@ function validateTripDetails({
   return errors;
 }
 
-function generateAccessToken(user: Users) {
+function generateAccessToken(user: Users): string {
   const payload = { id: user.id, email: user.email };
 
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
@@ -142,12 +163,12 @@ function generateAccessToken(user: Users) {
   return accessToken;
 }
 
-function verifyAccessToken(token: string) {
+function verifyAccessToken(token: string): JwtPayload | string {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
     return decoded;
   } catch (error) {
-    throw new Error("Invalid or expired token", error);
+    throw new Error(`Invalid or expired token: ${error.message}`);
   }
 }
 
