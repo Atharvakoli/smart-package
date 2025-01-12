@@ -9,9 +9,12 @@ async function deleteUser(existingUser: User) {
   }
 }
 
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     if (id === undefined) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }

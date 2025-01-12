@@ -3,47 +3,49 @@ import { NextResponse, NextRequest } from "next/server";
 
 async function deleteClothing(existingClothing: Clothing) {
   try {
-    return await existingClothing.destroy();
+    await existingClothing.destroy();
+    return true;
   } catch (error) {
-    throw new Error(`Database query failed ${error}`);
+    throw new Error(`Database query failed: ${error}`);
   }
 }
 
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
 
     if (!id) {
-      return NextResponse.json({ error: "Id is required" }, { status: 400 });
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
     const existingClothing = await Clothing.findOne({ where: { id } });
 
     if (!existingClothing) {
       return NextResponse.json(
-        { error: "Can't Find Clohthing" },
+        { error: "Clothing not found" },
         { status: 404 }
       );
     }
 
-    const deletedClothing = await deleteClothing(existingClothing);
+    const isDeleted = await deleteClothing(existingClothing);
 
-    if (!deleteClothing) {
+    if (!isDeleted) {
       return NextResponse.json(
-        {
-          error: "Can't delete User, something went wrong.",
-        },
-        { status: 404 }
+        { error: "Failed to delete clothing, something went wrong" },
+        { status: 500 }
       );
     }
 
     return NextResponse.json(
-      { message: "Clothing deleted successfully", deletedClothing },
+      { message: "Clothing deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
-      { error: `Failed to Delete Clothing ${error}` },
+      { error: `Failed to delete clothing: ${error}` },
       { status: 500 }
     );
   }

@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSearchPhotos } from "../../../../../../database/service/index.service";
 import { validateDetails } from "../../../../../../database/controllers/validation/validate";
 
-export async function GET(req: NextRequest, context: { params: { query: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ query: string }> }
+) {
   try {
-   const { query } = context.params;
+    const { query } = await context.params;
     const errors = validateDetails(query);
     if (errors.length > 0) {
       return NextResponse.json({ errors }, { status: 400 });

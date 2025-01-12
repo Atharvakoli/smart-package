@@ -30,10 +30,11 @@ async function getUpdatedClothing(
 }
 
 export async function PUT(
-  req: NextRequest, context: { params: { id: string } }
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-   const { id } = context.params;
+    const { id } = await context.params;
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 404 });
     }

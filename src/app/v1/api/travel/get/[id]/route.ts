@@ -17,9 +17,12 @@ async function getAllTrips() {
   }
 }
 
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-   const { id } = context.params;
+    const { id } = await context.params;
     const trips = await getAllTrips();
 
     if (trips.length === 0) {

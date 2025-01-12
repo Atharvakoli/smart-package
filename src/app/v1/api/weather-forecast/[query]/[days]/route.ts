@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateWeatherForecastDetails } from "../../../../../../../database/controllers/validation/validate";
 import { getWeatherForcast } from "../../../../../../../database/service/index.service";
 
-export async function GET(req: NextRequest, context: { params: { query: string, days: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ query: string; days: string }> }
+) {
   try {
-    const { query, days } = context.params;
+    const { query, days } = await context.params;
 
     const errors = validateWeatherForecastDetails(query, parseInt(days));
 
