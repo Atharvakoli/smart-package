@@ -1,4 +1,5 @@
 import "dotenv/config";
+import jwt from "jsonwebtoken";
 import axiosInstance, { axiosInstance1 } from "../lib/axios.lib";
 async function getWeather(query) {
   const response = await axiosInstance.get(
@@ -131,6 +132,25 @@ function validateTripDetails({
   return errors;
 }
 
+function generateAccessToken(user: Users) {
+  const payload = { id: user.id, email: user.email };
+
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
+    expiresIn: process.env.JWT_EXPIRATION || "1h",
+  });
+
+  return accessToken;
+}
+
+function verifyAccessToken(token: string) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    return decoded;
+  } catch (error) {
+    throw new Error("Invalid or expired token", error);
+  }
+}
+
 export {
   getWeather,
   getAlerts,
@@ -139,4 +159,6 @@ export {
   getSearchPhotos,
   weatherConditions,
   validateTripDetails,
+  verifyAccessToken,
+  generateAccessToken,
 };

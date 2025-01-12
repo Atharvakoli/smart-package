@@ -1,6 +1,5 @@
 import "dotenv/config";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -13,24 +12,6 @@ interface Users {
   password: string;
 }
 
-export function generateAccessToken(user: Users) {
-  const payload = { id: user.id, email: user.email };
-
-  const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRATION || "1h",
-  });
-
-  return accessToken;
-}
-
-export function verifyAccessToken(token: string) {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    return decoded;
-  } catch (error) {
-    throw new Error("Invalid or expired token", error);
-  }
-}
 
 async function createNewUser(user: Users) {
   try {
