@@ -7,7 +7,6 @@ const Banner = () => {
   const [access_token, setAccessToken] = useState(null);
   const [user, setUser] = useState(null);
 
-  console.log(state?.user);
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("");
 

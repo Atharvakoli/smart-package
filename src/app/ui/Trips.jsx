@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Calendar,
   MapPin,
@@ -13,8 +13,15 @@ import {
 import Link from "next/link";
 
 const Trips = ({ trip, contactNumber, email, name, id }) => {
-  const weatherData = JSON.parse(localStorage.getItem("weather"));
-  
+  const [weatherData, setWeatherData] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const weatherData = JSON.parse(localStorage.getItem("weather"));
+      setWeatherData(weatherData);
+    }
+  }, []);
+
   return (
     <div className="cursor-pointer gap-2 max-w-4xl bg-gray-100 py-12 text-purple-600">
       <div className="max-w-4xl mx-auto p-4">
