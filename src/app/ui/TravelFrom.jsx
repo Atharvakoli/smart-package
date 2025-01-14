@@ -1,11 +1,17 @@
 // components/TravelForm.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const TravelForm = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user"));
+      setUser(user);
+    }
+  }, []);
   const [formData, setFormData] = useState({
     user_id: user?.user?.id,
     location: "",

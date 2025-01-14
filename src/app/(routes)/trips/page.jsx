@@ -4,7 +4,13 @@ import Trips from "../../ui/Trips";
 import axios from "axios";
 
 const Trip = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user"));
+      setUser(user);
+    }
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [trips, setTrips] = useState([]);
   const [errors, setErrors] = useState("");

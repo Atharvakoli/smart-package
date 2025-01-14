@@ -3,12 +3,18 @@
 import { useAuth } from "@/app/auth-context/AuthContext";
 import axios from "axios";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const Profile = () => {
   const { state, logout } = useAuth();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user"));
+      setUser(user);
+    }
+  }, []);
   const userId = user?.user?.id || state?.user?.id;
   const [errors, setErrors] = useState("");
   const [loading, setLoading] = useState(false);
