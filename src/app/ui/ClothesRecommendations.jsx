@@ -2,74 +2,36 @@
 import { useState, useEffect } from "react";
 import { mockClothingData } from "./data";
 import Image from "next/image";
+import Photos from "./Photos";
 
-export default function ClothesRecommendation({ userPreferences }) {
-  const [recommendedClothes, setRecommendedClothes] = useState([]);
-
+export default function ClothesRecommendation({
+  photosDetails,
+  setPhotosDetails,
+  loading,
+  errors,
+}) {
   useEffect(() => {
-    if (userPreferences) {
-      const recommendations = [];
-
-      if (userPreferences?.activity_preferences?.outdoor?.length > 0) {
-        recommendations.push(
-          mockClothingData.find((item) => item.name === "Hiking Boots")
-        );
-      }
-
-      if (
-        userPreferences?.activity_preferences?.indoor?.includes("meditation")
-      ) {
-        recommendations.push(
-          mockClothingData.find((item) => item.name === "T-Shirt")
-        );
-      }
-
-      if (
-        userPreferences?.travel_history?.some(
-          (trip) => new Date(trip.start_date) > new Date("2023-06-01")
-        )
-      ) {
-        recommendations.push(
-          mockClothingData.find((item) => item.name === "Swimsuit")
-        );
-      }
-      recommendations.push(
-        mockClothingData.find((item) => item.name === "Jeans")
+    if (typeof window !== "undefined") {
+      const userPreferencesDetails = JSON.parse(
+        localStorage.getItem("user-preferences")
       );
-      recommendations.push(
-        mockClothingData.find((item) => item.name === "Jacket")
-      );
-
-      setRecommendedClothes(recommendations);
+      setPhotosDetails(userPreferencesDetails);
     }
-  }, [userPreferences]);
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h2 className="text-2xl font-bold text-purple-800 mb-4">
         Recommended Clothes
       </h2>
-      <p className="mb-4 text-gray-600">
-        Based on your preferences and travel history
+      <p className="mb-4 text-purple-600">
+        Based on your preferences and travel
       </p>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {recommendedClothes.map((item, index) => (
-          <div
-            key={index}
-            className="border rounded-lg p-4 flex flex-col items-center"
-          >
-            <Image
-              src={item.imageUrl}
-              alt={item.name}
-              className="w-32 h-32 object-cover mb-2 rounded"
-              width={50}
-              height={50}
-            />
-            <h3 className="font-semibold text-purple-700">{item.name}</h3>
-            <p className="text-sm text-gray-500">{item.category}</p>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <p className="mb-4 text-purple-600">Loading...</p>
+      ) : (
+        <Photos photosData={photosDetails?.photos} errors={errors} />
+      )}
     </div>
   );
 }

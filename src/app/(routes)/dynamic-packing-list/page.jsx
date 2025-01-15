@@ -1,8 +1,7 @@
 "use client";
-
 import ClothesRecommendation from "../../ui/ClothesRecommendations";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function TravelPreferencesForm() {
   const [homeCity, setHomeCity] = useState("");
@@ -17,6 +16,7 @@ export default function TravelPreferencesForm() {
   });
   const [travelHistory, setTravelHistory] = useState([]);
   const [newActivity, setNewActivity] = useState({ type: "outdoor", name: "" });
+  const [photosDetails, setPhotosDetails] = useState(null);
 
   const handleActivityAdd = () => {
     if (newActivity.name) {
@@ -54,14 +54,13 @@ export default function TravelPreferencesForm() {
         activity_preferences: activityPreferences,
         travel_history: travelHistory,
       });
-      setUserPreferences(response.data.newUserPreferences);
+      const { user_id, id, activity_preferences, ...userpreferences } =
+        response?.data?.newUserPreferences;
+      setUserPreferences(userpreferences);
       setSuccessMessage(
         response.data.message || "Preferences saved successfully!"
       );
-      localStorage.setItem(
-        "user-preferences",
-        JSON.stringify(response.data.newUserPreferences)
-      );
+      getClothesPhotos(Object.values(activity_preferences).join(","));
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setErrors(
@@ -71,6 +70,21 @@ export default function TravelPreferencesForm() {
       } else {
         setErrors("An unexpected error occurred.");
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getClothesPhotos = async (userPreferences) => {
+    console.log(userPreferences);
+    if (!userPreferences) return;
+    try {
+      setLoading(true);
+      const response = await axios.get(`/v1/api/photos/${userPreferences}`);
+      setPhotosDetails(response.data);
+      localStorage.setItem("user-preferences", JSON.stringify(response.data));
+    } catch (error) {
+      setErrors(error?.response?.data?.error);
     } finally {
       setLoading(false);
     }
@@ -158,7 +172,7 @@ export default function TravelPreferencesForm() {
         </div>
 
         <div>
-          <h2 className="text-lg font-medium text-gray-900">Travel History</h2>
+          <h2 className="text-lg font-medium text-gray-900">Travel</h2>
           {travelHistory.map((trip, index) => (
             <div
               key={index}
@@ -245,7 +259,7 @@ export default function TravelPreferencesForm() {
             onClick={handleTravelHistoryAdd}
             className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           >
-            Add Travel History
+            Add Travel
           </button>
         </div>
 
@@ -260,7 +274,10 @@ export default function TravelPreferencesForm() {
         </div>
       </form>
       <ClothesRecommendation
-        userPreferences={userPreferences}
+        photosDetails={photosDetails}
+        setPhotosDetails={setPhotosDetails}
+        loading={loading}
+        errors={errors}
       />
     </>
   );

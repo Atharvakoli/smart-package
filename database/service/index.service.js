@@ -1,6 +1,6 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import axiosInstance, { axiosInstance1 } from "../lib/axios.lib";
+import axiosInstance, { axiosInstance1 } from "../lib/axios.lib.js";
 
 async function getWeather(query) {
   const response = await axiosInstance.get(
@@ -30,17 +30,22 @@ async function getAlerts(query) {
   return response.data;
 }
 
+// async function getSearchPhotos(query) {
+//   const photos = [];
+//   const response = await axiosInstance1.get(
+//     `/search/photos?query=${query}&page=1&client_id=${process.env.UNSPLASH_ACCESS_KEY}`
+//   );
+
+//   for (let i = 0; i < Math.min(10, response.data.results.length); i++) {
+//     photos.push(response.data.results[i]);
+//   }
+
+//   return photos;
+// }
+
 async function getSearchPhotos(query) {
-  const photos = [];
-  const response = await axiosInstance1.get(
-    `/search/photos?query=${query}&page=1&client_id=${process.env.UNSPLASH_ACCESS_KEY}`
-  );
-
-  for (let i = 0; i < Math.min(10, response.data.results.length); i++) {
-    photos.push(response.data.results[i]);
-  }
-
-  return photos;
+  const response = await axiosInstance1.get(`/v1/search?query=${query}`);
+  return response.data;
 }
 
 const weatherConditions = [

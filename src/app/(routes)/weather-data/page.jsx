@@ -13,9 +13,11 @@ export default function WeatherApp() {
   const router = useRouter();
 
   useEffect(() => {
-    const storedWeather = localStorage.getItem("weather");
-    if (storedWeather) {
-      setWeatherData(JSON.parse(storedWeather));
+    if (typeof window != "undefined") {
+      const storedWeather = localStorage.getItem("weather");
+      if (storedWeather) {
+        setWeatherData(JSON.parse(storedWeather));
+      }
     }
   }, []);
 

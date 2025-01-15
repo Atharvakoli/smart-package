@@ -5,61 +5,64 @@ import axios from "axios";
 
 const Trip = () => {
   const [user, setUser] = useState(null);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const user = JSON.parse(localStorage.getItem("user"));
-      setUser(user);
-    }
-  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [trips, setTrips] = useState([]);
   const [errors, setErrors] = useState("");
+
   useEffect(() => {
-    const storedTrips = localStorage.getItem("trips");
-    if (storedTrips) {
-      setTrips(JSON.parse(storedTrips));
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      setUser(storedUser ? JSON.parse(storedUser) : null);
+
+      const storedTrips = localStorage.getItem("trips");
+      setTrips(storedTrips ? JSON.parse(storedTrips) : []);
     }
   }, []);
 
   useEffect(() => {
-    const handlefetch = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          `/v1/api/travel/get/${user?.user?.id}`
-        );
-        const newTrips = response.data;
-        setTrips(newTrips);
-        localStorage.setItem("trips", JSON.stringify(newTrips));
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-        setErrors(error?.response?.data?.error);
-      }
-    };
-    handlefetch();
+    if (user?.user?.id) {
+      const handleFetch = async () => {
+        setIsLoading(true);
+        try {
+          const response = await axios.get(
+            `/v1/api/travel/get/${user.user.id}`
+          );
+          const newTrips = response.data;
+          setTrips(newTrips);
+          localStorage.setItem("trips", JSON.stringify(newTrips));
+        } catch (error) {
+          setErrors(error?.response?.data?.error || "Failed to fetch trips");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      handleFetch();
+    }
   }, [user?.user?.id]);
 
   return (
     <>
-      {isLoading && <p className=" text-green-500 mb-4">Loading...</p>}
-      {errors && <p className=" text-red-500 mb-4">{errors}</p>}
-      <div className="grid grid-cols-2 p-2">
-        {trips && trips?.trips?.length > 0 ? (
-          trips?.trips.map((trip) => (
-            <Trips
-              key={trip.id}
-              trip={trip}
-              contactNumber={trips.contactNumber}
-              name={trips.name}
-              email={trips.email}
-              id={trip.id}
-            />
-          ))
-        ) : (
-          <p>No trips available.</p>
-        )}
-      </div>
+      {errors && <p className="text-red-500 mb-4">{errors}</p>}
+      {isLoading ? (
+        <p className="text-green-500 mb-4">Loading...</p>
+      ) : (
+        <div className="grid grid-cols-2 p-2">
+          {trips?.trips?.length > 0 ? (
+            trips.trips.map((trip) => (
+              <Trips
+                key={trip.id}
+                trip={trip}
+                contactNumber={trips?.contactNumber}
+                name={trips?.name}
+                email={trips?.email}
+                id={trip.id}
+              />
+            ))
+          ) : (
+            <p>No trips available.</p>
+          )}
+        </div>
+      )}
     </>
   );
 };

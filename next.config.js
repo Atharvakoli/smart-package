@@ -5,6 +5,7 @@ const nextConfig = {
       "via.placeholder.com",
       "placehold.co",
       "avatar.iran.liara.run",
+      "images.pexels.com",
     ],
   },
 };

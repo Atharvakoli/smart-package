@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Calendar,
   MapPin,
@@ -17,8 +17,8 @@ const Trips = ({ trip, contactNumber, email, name, id }) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const weatherData = JSON.parse(localStorage.getItem("weather"));
-      setWeatherData(weatherData);
+      const weather = JSON.parse(localStorage.getItem("weather"));
+      setWeatherData(weather);
     }
   }, []);
 

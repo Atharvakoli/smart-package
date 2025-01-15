@@ -6,14 +6,9 @@ import { useRouter } from "next/navigation";
 
 const TravelForm = () => {
   const [user, setUser] = useState(null);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const user = JSON.parse(localStorage.getItem("user"));
-      setUser(user);
-    }
-  }, []);
+  const [weatherData, setWeatherData] = useState(null);
+
   const [formData, setFormData] = useState({
-    user_id: user?.user?.id,
     location: "",
     start_date: "",
     end_date: "",
@@ -22,6 +17,17 @@ const TravelForm = () => {
     activity_type: [],
     frequency: "",
   });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const weather = JSON.parse(localStorage.getItem("weather"));
+
+      setUser(storedUser);
+      setWeatherData(weather);
+    }
+  }, [formData]);
+
   const [errors, setErrors] = useState("");
   const [tripDetails, setTripDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +47,7 @@ const TravelForm = () => {
       setFormData((prev) => ({
         ...prev,
         [name]: type === "number" ? Number(value) : value,
+        user_id: user?.user.id,
       }));
     }
   };
@@ -70,9 +77,7 @@ const TravelForm = () => {
       });
       setIsLoading(false);
 
-      if (weatherData) {
-        router.push("/trips");
-      }
+      router.push("/trips");
     } catch (error) {
       setIsLoading(false);
       console.error(error);
@@ -82,7 +87,9 @@ const TravelForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-8">
-      {errors && <p className="text-center text-error-500 mb-4">{errors}</p>}
+      {errors && (
+        <p className="text-center text-red-400 text-error-500 mb-4">{errors}</p>
+      )}
       {tripDetails?.message && (
         <p className="text-center text-green-500 mb-4">
           {tripDetails?.message}
