@@ -8,8 +8,6 @@ async function getUpdatedUserPreferences(
 ) {
   try {
     existingUserPreferences.set({
-      user_id:
-        newUserPreferencesDetails.user_id ?? existingUserPreferences.user_id,
       home_city:
         newUserPreferencesDetails.home_city ??
         existingUserPreferences.home_city,

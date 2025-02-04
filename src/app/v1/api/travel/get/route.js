@@ -1,10 +1,9 @@
-import { Trip } from "@/models";
-import { User } from "../../../../../../models/User";
+import { Trip } from "@/models/trip";
 import { NextResponse } from "next/server";
 
 async function getAllTrips() {
   try {
-    const trips = await Trip.findAll({ include: "user" });
+    const trips = await Trip.findAll();
 
     if (!trips || trips.length === 0) {
       return [];
@@ -17,22 +16,15 @@ async function getAllTrips() {
   }
 }
 
-export async function GET(req, context) {
+export async function GET() {
   try {
-    const { id } = await context.params;
     const trips = await getAllTrips();
 
     if (trips.length === 0) {
       return NextResponse.json({ error: "No trips found" }, { status: 404 });
     }
 
-    const user = await User.findOne({ where: { id } });
-
-    if (!user) {
-      return NextResponse.json({ error: "User, NOT FOUND" }, { status: 404 });
-    }
-
-    return NextResponse.json({ ...user?.dataValues, trips }, { status: 200 });
+    return NextResponse.json({ trips }, { status: 200 });
   } catch (error) {
     console.error("Error fetching trips:", error);
     return NextResponse.json(

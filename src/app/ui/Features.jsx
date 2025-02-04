@@ -2,7 +2,6 @@
 import { CheckSquare, Cloud, ClipboardList, ShoppingBag } from "lucide-react";
 import { features } from "./data";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const iconMap = {
   ClipboardList,
@@ -12,20 +11,6 @@ const iconMap = {
 };
 
 export default function Features() {
-  const [user, setUser] = useState(null);
-  const [access_token, setAccessToken] = useState(null);
-
-  useEffect(() => {
-    try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      const token = sessionStorage.getItem("access_token");
-      setUser(storedUser);
-      setAccessToken(token);
-    } catch (error) {
-      console.error("Failed to parse user from localStorage:", error);
-    }
-  }, []);
-
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -38,8 +23,7 @@ export default function Features() {
             return (
               <Link
                 href={{
-                  pathname: access_token ? feature.route : "/auth/sign-up",
-                  query: access_token ? { id: user?.user?.id } : "",
+                  pathname: feature.route,
                 }}
                 key={feature.id}
                 className="flex flex-col items-center text-center p-6 rounded-lg border border-gray-200 hover:border-purple-200 hover:shadow-lg transition-all"

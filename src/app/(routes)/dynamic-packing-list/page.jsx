@@ -76,7 +76,6 @@ export default function TravelPreferencesForm() {
   };
 
   const getClothesPhotos = async (userPreferences) => {
-    console.log(userPreferences);
     if (!userPreferences) return;
     try {
       setLoading(true);

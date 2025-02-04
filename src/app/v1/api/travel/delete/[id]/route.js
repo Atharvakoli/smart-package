@@ -1,4 +1,4 @@
-import { Trip } from "@/models";
+import { Trip } from "@/models/trip";
 import { NextResponse } from "next/server";
 
 async function deleteTrip(existingTrip) {

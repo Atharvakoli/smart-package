@@ -11,16 +11,6 @@ Trip.init(
       primaryKey: true,
       allowNull: false,
     },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: "users",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
     location: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -1,9 +1,7 @@
-
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { validateTripDetails } from "../../../../../../database/service/index.service";
-import { Trip } from "@/models";
-
+import { Trip } from "@/models/trip";
 
 async function createTrip(tripDetails) {
   try {

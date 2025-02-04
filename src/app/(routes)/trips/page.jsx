@@ -4,28 +4,23 @@ import Trips from "../../ui/Trips";
 import axios from "axios";
 
 const Trip = () => {
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [trips, setTrips] = useState([]);
   const [errors, setErrors] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      setUser(storedUser ? JSON.parse(storedUser) : null);
-
       const storedTrips = localStorage.getItem("trips");
       setTrips(storedTrips ? JSON.parse(storedTrips) : []);
     }
   }, []);
 
   useEffect(() => {
-    if (user?.user?.id) {
       const handleFetch = async () => {
         setIsLoading(true);
         try {
           const response = await axios.get(
-            `/v1/api/travel/get/${user.user.id}`
+            `/v1/api/travel/get`
           );
           const newTrips = response.data;
           setTrips(newTrips);
@@ -37,8 +32,7 @@ const Trip = () => {
         }
       };
       handleFetch();
-    }
-  }, [user?.user?.id]);
+  }, []);
 
   return (
     <>

@@ -5,7 +5,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const TravelForm = () => {
-  const [user, setUser] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -20,10 +19,7 @@ const TravelForm = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
       const weather = JSON.parse(localStorage.getItem("weather"));
-
-      setUser(storedUser);
       setWeatherData(weather);
     }
   }, [formData]);
@@ -47,7 +43,6 @@ const TravelForm = () => {
       setFormData((prev) => ({
         ...prev,
         [name]: type === "number" ? Number(value) : value,
-        user_id: user?.user.id,
       }));
     }
   };

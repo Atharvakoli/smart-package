@@ -39,7 +39,6 @@ export default function WeatherApp() {
         router.push("/trips");
       }
     } catch (err) {
-      console.log(err);
       setError(err?.response?.data?.error);
     } finally {
       setIsLoading(false);

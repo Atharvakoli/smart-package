@@ -7,7 +7,6 @@ async function createUserPreferences(userPreferences) {
   try {
     return await UserPreferences.create({
       id: uuidv4(),
-      user_id: userPreferences.user_id,
       home_city: userPreferences.home_city,
       activity_preferences: userPreferences.activity_preferences,
       travel_history: userPreferences.travel_history,

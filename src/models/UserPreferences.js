@@ -11,16 +11,6 @@ UserPreferences.init(
       allowNull: false,
       primaryKey: true,
     },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: "users",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
     home_city: {
       type: DataTypes.STRING,
       allowNull: false,
