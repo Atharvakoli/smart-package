@@ -1,5 +1,5 @@
 
-import { UserPreferences } from "@/models";
+import { UserPreferences } from "@/models/UserPreferences";
 import { NextResponse } from "next/server";
 
 async function getAllUserPreferences() {

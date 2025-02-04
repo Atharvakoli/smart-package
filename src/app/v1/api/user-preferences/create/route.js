@@ -1,5 +1,4 @@
-
-import { UserPreferences } from "@/models";
+import { UserPreferences } from "@/models/UserPreferences";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
