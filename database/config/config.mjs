@@ -1,3 +1,4 @@
+import pg from "pg";
 export default {
   development: {
     username: process.env.DB_USER,
@@ -28,5 +29,6 @@ export default {
         rejectUnauthorized: false, // Required for Supabase SSL
       },
     },
+    ...(typeof window === "undefined" && { dialectModule: pg }),
   },
 };
